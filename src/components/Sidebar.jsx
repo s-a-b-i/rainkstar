@@ -1,10 +1,23 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../assets/Logo.svg";
-import { MdDashboard, MdFolder, MdLocalOffer, MdInventory, 
-         MdPerson, MdPayments, MdAccountBalance, MdHelp,
-         MdWorkspaces, MdMenuBook, MdFavorite, MdShoppingCart,
-         MdCreditCard, MdMenu, MdClose } from "react-icons/md";
+import { 
+  MdDashboard, 
+  MdFolder, 
+  MdLocalOffer, 
+  MdInventory, 
+  MdPerson, 
+  MdPayments, 
+  MdAccountBalance, 
+  MdHelp,
+  MdWorkspaces, 
+  MdMenuBook, 
+  MdFavorite, 
+  MdShoppingCart,
+  MdCreditCard, 
+  MdMenu, 
+  MdClose 
+} from "react-icons/md";
 
 const Sidebar = ({ mode, toggleMode, userName = "Michael Smyth" }) => {
   const location = useLocation();
@@ -45,7 +58,6 @@ const Sidebar = ({ mode, toggleMode, userName = "Michael Smyth" }) => {
     return location.pathname === fullPath;
   };
 
-  // Mode Toggler Component
   const Toggler = () => (
     <div className="flex items-center justify-between bg-[#3158D3] rounded-lg p-2">
       <button
@@ -67,32 +79,28 @@ const Sidebar = ({ mode, toggleMode, userName = "Michael Smyth" }) => {
     </div>
   );
 
-  // Mobile Menu Button
   const MobileMenuButton = () => (
     <button
       className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-foundations-primary text-white"
       onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
     >
-      {isMobileMenuOpen ? (
-        <MdClose size={24} />
-      ) : (
-        <MdMenu size={24} />
-      )}
+      {isMobileMenuOpen ? <MdClose size={24} /> : <MdMenu size={24} />}
     </button>
   );
 
-  // Navigation Links Component
   const NavigationLinks = () => (
-    <nav className="mt-6 flex-1 px-4">
+    <nav className="mt-6">
       <ul className="space-y-2">
         {links[mode].map((link) => (
           <li key={link.name}>
             <Link
               to={getFullPath(link.path)}
               className={`flex items-center gap-3 p-3 rounded-lg transition-colors duration-200
-                ${isActiveLink(link.path) 
-                  ? 'bg-[#3158D3] text-white' 
-                  : 'hover:bg-[#3158D3] hover:text-white text-gray-200'
+                ${
+                  isActiveLink(link.path)
+                    ? 'bg-[#3158D3] text-white'
+                    : 'hover:bg-[#3158D3] hover:text-white text-gray-200'
                 }`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
@@ -105,18 +113,19 @@ const Sidebar = ({ mode, toggleMode, userName = "Michael Smyth" }) => {
     </nav>
   );
 
-  // Sidebar Content
   const SidebarContent = () => (
-    <div className="h-full flex flex-col">
-      <div className="p-6 mt-6 sm:mt-0">
+    <div className="min-h-full flex flex-col p-6">
+      <div className="mb-6">
         <img src={Logo} alt="Logo" className="w-48 h-auto" />
       </div>
 
-      <div className="px-6 py-4">
+      <div className="mb-6">
         <Toggler />
       </div>
+
       <NavigationLinks />
-      <div className="p-6 mt-auto border-t border-[#3158D3]/20">
+
+      <div className="mt-auto pt-6 border-t border-[#3158D3]/20">
         <div className="flex items-center gap-3 text-gray-200">
           <img
             src="/user-avatar.svg"
@@ -136,20 +145,22 @@ const Sidebar = ({ mode, toggleMode, userName = "Michael Smyth" }) => {
     <>
       <MobileMenuButton />
       
-      {/* Desktop Sidebar - Updated with fixed positioning */}
-      <aside className="hidden lg:block fixed left-0 top-0 w-64 h-screen bg-foundations-primary">
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:block fixed left-0 top-0 w-64 h-screen bg-foundations-primary overflow-y-auto">
         <SidebarContent />
       </aside>
 
-      {/* Mobile Sidebar */}
+      {/* Mobile/Tablet Sidebar with Overlay */}
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-40">
+          {/* Overlay */}
           <div 
             className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
             onClick={() => setIsMobileMenuOpen(false)}
           />
           
-          <aside className="fixed left-0 top-0 h-full w-64 bg-foundations-primary overflow-y-auto">
+          {/* Sidebar */}
+          <aside className="fixed left-0 top-0 h-screen w-64 bg-foundations-primary overflow-y-auto">
             <SidebarContent />
           </aside>
         </div>
@@ -157,4 +168,5 @@ const Sidebar = ({ mode, toggleMode, userName = "Michael Smyth" }) => {
     </>
   );
 };
+
 export default Sidebar;

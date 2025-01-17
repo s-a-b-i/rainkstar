@@ -8,7 +8,7 @@ const DashboardLayout = ({ mode, toggleMode }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
       <Sidebar 
         mode={mode} 
@@ -17,10 +17,10 @@ const DashboardLayout = ({ mode, toggleMode }) => {
         onClose={() => setIsSidebarOpen(false)}
       />
       
-      {/* Main Content - Added margin-left for large screens */}
-      <div className="lg:ml-64 flex flex-col min-h-screen">
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-h-screen w-full lg:ml-64">
         {/* Navbar */}
-        <div className="sticky top-0 z-10 bg-white border-b">
+        <div className="sticky top-0 z-10 bg-white border-b w-full">
           {mode === "Publisher" ? (
             <NavbarPublisher 
               userName="Michael Smyth"
@@ -35,7 +35,7 @@ const DashboardLayout = ({ mode, toggleMode }) => {
         </div>
 
         {/* Main Content Area */}
-        <main className="flex-1 p-4 md:p-6 overflow-x-hidden">
+        <main className="flex-1 p-4 md:p-6 overflow-x-hidden overflow-y-auto">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>
@@ -44,5 +44,4 @@ const DashboardLayout = ({ mode, toggleMode }) => {
     </div>
   );
 };
-
 export default DashboardLayout;
