@@ -59,9 +59,9 @@ const Sidebar = ({ mode, toggleMode, userName = "Michael Smyth" }) => {
   };
 
   const Toggler = () => (
-    <div className="flex items-center justify-between bg-[#3158D3] rounded-lg p-2">
+    <div className="flex flex-col items-center bg-[#3158D3] rounded-lg p-2">
       <button
-        className={`flex-1 py-2 px-4 rounded-md transition-all duration-200 ${
+        className={`w-full py-2 px-4 rounded-md transition-all duration-200 ${
           mode === "Publisher" ? "bg-white text-[#3158D3]" : "text-white"
         }`}
         onClick={() => toggleMode("Publisher")}
@@ -69,7 +69,7 @@ const Sidebar = ({ mode, toggleMode, userName = "Michael Smyth" }) => {
         Publisher
       </button>
       <button
-        className={`flex-1 py-2 px-4 rounded-md transition-all duration-200 ${
+        className={`w-full mt-2 py-2 px-4 rounded-md transition-all duration-200 ${
           mode === "Advertiser" ? "bg-white text-[#3158D3]" : "text-white"
         }`}
         onClick={() => toggleMode("Advertiser")}
@@ -78,6 +78,7 @@ const Sidebar = ({ mode, toggleMode, userName = "Michael Smyth" }) => {
       </button>
     </div>
   );
+  
 
   const MobileMenuButton = () => (
     <button
