@@ -1,11 +1,11 @@
 // components/FormSections/ExtrasSection.jsx
-import React from 'react';
+import React from "react";
 
-const ExtrasSection = ({ 
-  extras, 
-  handleAddExtra, 
-  handleRemoveExtra, 
-  handleExtraChange 
+const ExtrasSection = ({
+  extras,
+  handleAddExtra,
+  handleRemoveExtra,
+  handleExtraChange,
 }) => {
   return (
     <div>
@@ -21,20 +21,24 @@ const ExtrasSection = ({
           <div key={index} className="flex gap-4 mt-2">
             <select
               value={extra.select}
-              onChange={(e) => handleExtraChange(index, "select", e.target.value)}
+              onChange={(e) =>
+                handleExtraChange(index, "select", e.target.value)
+              }
               className="w-full border border-gray-300 rounded-md p-2"
             >
               <option value="">Select an option</option>
-              <option value="facebook">Facebook Share</option>
-              <option value="twitter">Twitter Share</option>
-              <option value="linkedin">LinkedIn Share</option>
-              <option value="instagram">Instagram Share</option>
+              <option value="gambling">Gambling</option>
+              <option value="adult">Adult</option>
+              <option value="cbd">CBD</option>
+              <option value="trading">Trading</option>
             </select>
             <input
               type="text"
               placeholder="Price"
               value={extra.price}
-              onChange={(e) => handleExtraChange(index, "price", e.target.value)}
+              onChange={(e) =>
+                handleExtraChange(index, "price", e.target.value)
+              }
               className="w-full border border-gray-300 rounded-md p-2"
             />
             <button
