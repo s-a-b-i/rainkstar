@@ -1,13 +1,15 @@
+// components/HomeComponents/HeroSection.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../store/authStore"; // Add this import
 import businessWomanImage from "../../assets/business-woman.jpg";
 
-const HeroSection = ({ setIsAuthenticated }) => {
+const HeroSection = () => { // Remove setIsAuthenticated prop
   const navigate = useNavigate();
+  const { setIsAuthenticated } = useAuthStore(); // Add this hook
 
   const handleSignUp = () => {
-    setIsAuthenticated(true);
-    navigate("/publisher/dashboard");
+    navigate("/signup"); // Change to navigate to signup page instead of direct authentication
   };
 
   const handleViewPricing = () => {

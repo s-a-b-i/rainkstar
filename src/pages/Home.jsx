@@ -9,11 +9,11 @@ import Testimonials from '../components/HomeComponents/Testimonials';
 import CallToAction from '../components/HomeComponents/CallToAction';
 import Footer from '../components/HomeComponents/Footer';
 
-function Home({ setIsAuthenticated }) {
+function Home() { // Remove setIsAuthenticated prop
   return (
     <div className="bg-gray-900 text-white font-sans">
       <Header />
-      <HeroSection setIsAuthenticated={setIsAuthenticated} />
+      <HeroSection />
       <StatsSection />
       <LogosSection />
       <PlatformWorkflow />

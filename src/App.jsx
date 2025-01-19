@@ -1,6 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import { useAuthStore } from "./store/authStore";
+
+// Layout
 import DashboardLayout from "./layouts/DashboardLayout";
+import FloatingShape from "./components/FloatingShape";
+import LoadingSpinner from "./components/LoadingSpinner";
+
+// Home Components
+import Home from "./pages/Home";
+
+
+// Auth Pages
+import SignUpPage from "./Pages/SignUpPage";
+import LoginPage from "./Pages/LoginPage";
+import EmailVerificationPage from "./Pages/EmailVerificationPage";
+import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
+import ResetPasswordPage from "./Pages/ResetPasswordPage";
+
+// Publisher Pages
 import PublisherDashboard from "./pages/Publisher/Dashboard";
 import Products from "./pages/Publisher/Products";
 import Promos from "./pages/Publisher/Promos";
@@ -11,9 +30,8 @@ import Balance from "./pages/Publisher/Balance";
 import Deposit from "./components/Forms/Deposit";
 import Faq from "./pages/Publisher/Faq";
 import AddWebsiteForm from "./components/Forms/AddWebsiteForm";
-import Home from "./pages/Home";
 
-// Import Advertiser components
+// Advertiser Pages
 import AdvertiserDashboard from "./pages/Advertiser/Dashboard";
 import Projects from "./pages/Advertiser/Projects";
 import Catalogue from "./pages/Advertiser/Catalogue";
@@ -25,21 +43,93 @@ import AdvertiserBalance from "./pages/Advertiser/Balance";
 import AdvertiserFaq from "./pages/Advertiser/Faq";
 import CreateProject from "./components/Forms/CreateProject";
 
+const ProtectedRoutes = ({ children }) => {
+  const { isAuthenticated, user } = useAuthStore();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (!user.isVerified) {
+    return <Navigate to="/verify-email" replace />;
+  }
+
+  return children;
+};
+
+const RedirectAuthenticatedUser = ({ children }) => {
+  const { isAuthenticated, user } = useAuthStore();
+
+  if (isAuthenticated && user.isVerified) {
+    return <Navigate to="/publisher/dashboard" replace />;
+  }
+
+  return children;
+};
+
 const App = () => {
   const [mode, setMode] = useState("Publisher");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { checkAuth, isCheckingAuth, setIsAuthenticated } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   const toggleMode = () => setMode((prev) => (prev === "Publisher" ? "Advertiser" : "Publisher"));
 
+  if (isCheckingAuth) {
+    return <LoadingSpinner />;
+  }
+
   return (
-    <Routes>
-      {!isAuthenticated ? (
-        <>
-          <Route path="/" element={<Home setIsAuthenticated={setIsAuthenticated} />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </>
-      ) : (
-        <Route element={<DashboardLayout mode={mode} toggleMode={toggleMode} />}>
+    <div className="min-h-screen">
+      <Routes>
+        {/* Public Home Route */}
+        <Route 
+          path="/" 
+          element={
+            <RedirectAuthenticatedUser>
+              <Home setIsAuthenticated={setIsAuthenticated} />
+            </RedirectAuthenticatedUser>
+          } 
+        />
+
+        {/* Auth Routes */}
+        <Route
+          path="/signup"
+          element={
+            <RedirectAuthenticatedUser>
+              <SignUpPage />
+            </RedirectAuthenticatedUser>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <RedirectAuthenticatedUser>
+              <LoginPage />
+            </RedirectAuthenticatedUser>
+          }
+        />
+        <Route path="/verify-email" element={<EmailVerificationPage />} />
+        <Route
+          path="/forgot-password"
+          element={
+            <RedirectAuthenticatedUser>
+              <ForgotPasswordPage />
+            </RedirectAuthenticatedUser>
+          }
+        />
+        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+
+        {/* Protected Dashboard Routes */}
+        <Route
+          element={
+            <ProtectedRoutes>
+              <DashboardLayout mode={mode} toggleMode={toggleMode} />
+            </ProtectedRoutes>
+          }
+        >
           {/* Balance related routes */}
           <Route path="/balance" element={<Balance />} />
           <Route path="/balance/deposit" element={<Deposit />} />
@@ -74,16 +164,14 @@ const App = () => {
 
           {/* Default redirects */}
           <Route
-            path="/"
-            element={<Navigate to={mode === "Publisher" ? "/publisher/dashboard" : "/advertiser/dashboard"} />}
-          />
-          <Route
             path="*"
             element={<Navigate to={mode === "Publisher" ? "/publisher/dashboard" : "/advertiser/dashboard"} />}
           />
         </Route>
-      )}
-    </Routes>
+      </Routes>
+
+      <Toaster />
+    </div>
   );
 };
 
